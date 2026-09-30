@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nocturne Atelier | Gothic Fashion Showcase</title>
+<meta name="description" content="A gallery of gothic fashion: dresses, outerwear, boots, jewelry and accessories.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ========== 1. DESIGN TOKENS (change colours & fonts here) ========== */
+:root{
+  --night:#120d16; --crypt:#1b1420; --vault:#271b2e; --line:#3a2a42;
+  --blood:#8c1c2c; --rose:#c2566b; --bone:#e9e0d2; --silver:#a29bab;
+  --display:'UnifrakturCook','Old English Text MT',Georgia,serif;
+  --body:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --r:6px;
+}
+/* ========== 2. BASE ========== */
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{background:var(--night);color:var(--bone);font:400 1.2rem/1.65 var(--body);
+  background-image:radial-gradient(ellipse at 50% -10%,#2c1636 0,transparent 60%)}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.15}
+h2{font-size:clamp(2rem,5vw,3rem);margin-bottom:.5rem}
+:focus-visible{outline:2px solid var(--rose);outline-offset:3px}
+.wrap{width:min(1100px,92%);margin:0 auto}
+section{padding:5rem 0}
+.lead{color:var(--silver);max-width:52ch}
+.sr{position:absolute;left:-9999px}
+
+/* ========== 3. UI COMPONENTS ========== */
+.btn{display:inline-block;font:600 1.05rem var(--body);letter-spacing:.06em;text-decoration:none;cursor:pointer;
+  padding:.7rem 1.6rem;border-radius:var(--r);border:1px solid var(--blood);background:var(--blood);color:var(--bone);transition:background .2s,border-color .2s}
+.btn:hover{background:var(--rose);border-color:var(--rose)}
+.btn.ghost{background:transparent;border-color:var(--silver);color:var(--bone)}
+.btn.ghost:hover{border-color:var(--rose);color:var(--rose);background:transparent}
+.chip{font:600 1rem var(--body);cursor:pointer;padding:.35rem 1.1rem;border-radius:99px;border:1px solid var(--line);background:transparent;color:var(--silver);transition:.2s}
+.chip:hover{border-color:var(--rose);color:var(--bone)}
+.chip[aria-pressed="true"]{background:var(--blood);border-color:var(--blood);color:var(--bone)}
+.tag{font-size:.9rem;color:var(--rose);font-style:italic}
+input,textarea{width:100%;font:inherit;color:var(--bone);background:var(--crypt);border:1px solid var(--line);border-radius:var(--r);padding:.65rem .9rem}
+input::placeholder,textarea::placeholder{color:#7d7386}
+input:focus,textarea:focus{border-color:var(--rose);outline:none}
+label{display:block;font-size:1rem;color:var(--silver);margin:.9rem 0 .3rem}
+.card{background:var(--crypt);border:1px solid var(--line);border-radius:var(--r);padding:1.5rem}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--blood),transparent);border:0;margin:0}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translate(-50%,150%);background:var(--vault);border:1px solid var(--rose);
+  padding:.8rem 1.4rem;border-radius:var(--r);transition:transform .3s;z-index:60}
+.toast.show{transform:translate(-50%,0)}
+
+/* ========== 4. HEADER & MENU ========== */
+header{position:sticky;top:0;z-index:40;background:rgba(18,13,22,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:1.2rem;height:68px}
+.logo{font:700 1.7rem var(--display);text-decoration:none;margin-right:auto}
+nav ul{display:flex;gap:1.6rem;list-style:none;padding:0}
+nav a{text-decoration:none;color:var(--silver);transition:color .2s}
+nav a:hover{color:var(--rose)}
+.search{position:relative;width:220px}
+.search input{padding:.4rem .9rem;border-radius:99px}
+.icon-btn{display:none;background:none;border:1px solid var(--line);color:var(--bone);width:42px;height:42px;border-radius:var(--r);cursor:pointer;font-size:1.3rem}
+
+/* ========== 5. HERO ========== */
+.hero{padding:4rem 0 5rem}
+.hero .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:3rem;align-items:center}
+.hero h1{font-size:clamp(2.8rem,8vw,5.5rem);margin-bottom:1rem}
+.hero p{color:var(--silver);max-width:44ch;margin-bottom:2rem}
+.hero .btn{margin-right:.6rem}
+.arch{aspect-ratio:3/4;border-radius:999px 999px 6px 6px;border:2px solid var(--silver);padding:10px;position:relative;
+  background:radial-gradient(circle at 50% 30%,#5a1e3a,#1b1420 70%);box-shadow:0 0 60px rgba(140,28,44,.35)}
+.arch::before{content:"";position:absolute;inset:10px;border-radius:999px 999px 2px 2px;border:1px solid var(--line)}
+.arch svg{width:100%;height:100%}
+
+/* ========== 6. GALLERY ========== */
+.filters{display:flex;flex-wrap:wrap;gap:.6rem;margin:1.5rem 0 .6rem}
+#count{color:var(--silver);font-size:1rem;margin-bottom:1.5rem;min-height:1.6em}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.6rem}
+.item{background:none;border:0;padding:0;text-align:left;color:inherit;cursor:pointer;font:inherit}
+.frame{aspect-ratio:3/4;border-radius:999px 999px 4px 4px;border:1px solid var(--line);overflow:hidden;display:grid;place-items:center;transition:border-color .2s,transform .2s}
+.item:hover .frame,.item:focus-visible .frame{border-color:var(--rose);transform:translateY(-4px)}
+.frame img{width:100%;height:100%;object-fit:cover}
+.frame svg{width:38%;opacity:.55}
+.item h3{font-size:1.3rem;margin-top:.8rem}
+.empty{grid-column:1/-1;text-align:center;padding:3rem 0;color:var(--silver)}
+
+/* ========== 7. LIGHTBOX (modal) ========== */
+.modal{position:fixed;inset:0;background:rgba(10,6,12,.92);display:none;place-items:center;z-index:50;padding:1rem}
+.modal.open{display:grid}
+.modal .card{max-width:760px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;position:relative}
+.modal .frame{border-radius:var(--r);aspect-ratio:3/4}
+.modal h3{font-size:2rem}
+.modal .nav{display:flex;gap:.6rem;margin-top:1.4rem}
+.close{position:absolute;top:.6rem;right:.8rem;background:none;border:0;color:var(--silver);font-size:1.8rem;cursor:pointer}
+
+/* ========== 8. ABOUT, CONTACT, FOOTER ========== */
+.about{background:var(--crypt);border-block:1px solid var(--line)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.4rem;margin-top:2rem}
+.cols h3{font-size:1.5rem;margin-bottom:.4rem}
+.cols p{color:var(--silver)}
+.contact form{max-width:520px;margin-top:1.5rem}
+.contact .btn{margin-top:1.2rem}
+footer{padding:2.5rem 0;text-align:center;color:var(--silver);font-size:1rem}
+
+/* ========== 9. RESPONSIVE ========== */
+@media(max-width:820px){
+  .hero .wrap,.modal .card{grid-template-columns:1fr}
+  .arch{max-width:280px;margin:0 auto}
+  .icon-btn{display:block}
+  nav{position:absolute;top:68px;left:0;right:0;background:var(--night);border-bottom:1px solid var(--line);display:none}
+  nav.open{display:block}
+  nav ul{flex-direction:column;gap:0;padding:.5rem 4%}
+  nav li a{display:block;padding:.8rem 0}
+  .search{position:absolute;top:68px;left:0;right:0;width:auto;padding:.6rem 4%;background:var(--night);border-bottom:1px solid var(--line);display:none}
+  .search.open{display:block}
+  nav.open ~ .search.open{top:auto}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<!-- ========== HEADER / MENU / SEARCH ========== -->
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="#top">Nocturne Atelier</a>
+    <nav id="menu" aria-label="Main menu">
+      <ul>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="search" id="searchBox">
+      <label class="sr" for="q">Search the gallery</label>
+      <input id="q" type="search" placeholder="Search the gallery (press /)" autocomplete="off">
+    </div>
+    <button class="icon-btn" id="searchBtn" aria-label="Toggle search" aria-expanded="false">&#9906;</button>
+    <button class="icon-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false" aria-controls="menu">&#9776;</button>
+  </div>
+</header>
+
+<main id="top">
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Dressed for the dusk</h1>
+      <p>A gallery of gothic fashion, from Victorian mourning silk and velvet capes to platform boots and silver jewelry.</p>
+      <a class="btn" href="#gallery">Browse the gallery</a>
+      <a class="btn ghost" href="#contact">Join the mailing list</a>
+    </div>
+    <div class="arch" aria-hidden="true">
+      <svg viewBox="0 0 100 130"><g fill="none" stroke="#a29bab" stroke-width="1.2">
+        <path d="M50 12v104M30 38h40"/><path d="M50 12l-6 8h12z" fill="#a29bab"/>
+        <path d="M18 122c0-30 14-46 32-46s32 16 32 46" stroke="#8c1c2c" stroke-width="2"/></g></svg>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- ========== GALLERY ========== -->
+<section id="gallery">
+  <div class="wrap">
+    <h2>The gallery</h2>
+    <p class="lead">Filter by category, search by name, or open any piece for details.</p>
+    <div class="filters" id="filters" role="group" aria-label="Filter by category"></div>
+    <p id="count" aria-live="polite"></p>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<!-- ========== ABOUT ========== -->
+<section id="about" class="about">
+  <div class="wrap">
+    <h2>About the atelier</h2>
+    <p class="lead">Nocturne Atelier is a visual archive of gothic style. Replace this text with your own story.</p>
+    <div class="cols">
+      <div class="card"><h3>Romantic</h3><p>Lace, velvet, high collars and long sleeves, drawn from Victorian mourning dress.</p></div>
+      <div class="card"><h3>Trad goth</h3><p>Backcombed hair, fishnets, leather and silver, from the post-punk clubs of the 1980s.</p></div>
+      <div class="card"><h3>Modern dark</h3><p>Sharp tailoring, layered black and heavy platforms for everyday wear.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CONTACT ========== -->
+<section id="contact" class="contact">
+  <div class="wrap">
+    <h2>Join the mailing list</h2>
+    <p class="lead">Get new looks in your inbox. No spam.</p>
+    <form id="form">
+      <label for="name">Name</label>
+      <input id="name" required placeholder="Your name">
+      <label for="email">Email</label>
+      <input id="email" type="email" required placeholder="you@example.com">
+      <button class="btn" type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap"><p>&copy; <span id="year"></span> Nocturne Atelier. All rights reserved.</p></div></footer>
+
+<!-- ========== LIGHTBOX ========== -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="card">
+    <button class="close" id="mClose" aria-label="Close">&times;</button>
+    <div class="frame" id="mFrame"></div>
+    <div>
+      <p class="tag" id="mCat"></p>
+      <h3 id="mTitle"></h3>
+      <p id="mDesc" style="color:var(--silver);margin-top:.6rem"></p>
+      <div class="nav">
+        <button class="btn ghost" id="mPrev">Previous</button>
+        <button class="btn ghost" id="mNext">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ========== GALLERY DATA ==========
+   To use your own photos, add  img:"images/your-photo.jpg"  to an item
+   (put the photo in an "images" folder in your GitHub repo). */
+const ITEMS = [
+  {t:"Mourning Silk Dress",c:"Dresses",d:"Floor-length black silk with a high lace collar and buttoned cuffs.",h:340},
+  {t:"Tiered Tulle Skirt",c:"Dresses",d:"Layers of black tulle over a satin underskirt for a full, dramatic hem.",h:300},
+  {t:"Velvet Opera Cape",c:"Outerwear",d:"Deep burgundy velvet with a hood and a clasp in tarnished silver.",h:350},
+  {t:"Brocade Frock Coat",c:"Outerwear",d:"Tailored coat with jacquard brocade and a row of covered buttons.",h:280},
+  {t:"Platform Buckle Boots",c:"Footwear",d:"Chunky soles, five silver buckles and a matte leather finish.",h:320},
+  {t:"Lace-Up Victorian Boots",c:"Footwear",d:"Ankle boots with a stacked heel and long black laces.",h:310},
+  {t:"Silver Ankh Choker",c:"Jewelry",d:"Velvet ribbon choker with a hand-cast silver ankh pendant.",h:270},
+  {t:"Rosary Necklace",c:"Jewelry",d:"Long black bead strand with an oxidized crucifix.",h:330},
+  {t:"Lace Fingerless Gloves",c:"Accessories",d:"Elbow-length stretch lace with a satin bow at the wrist.",h:290},
+  {t:"Cathedral Veil",c:"Accessories",d:"Sheer black veil edged in scalloped lace, worn with a comb.",h:300},
+  {t:"Corset Belt",c:"Accessories",d:"Waist-cinching belt with steel boning and front hook closure.",h:350},
+  {t:"Bat-Wing Sleeve Top",c:"Dresses",d:"Draped jersey top with long pointed sleeves and a cowl neck.",h:320}
+];
+const GLYPH='<svg viewBox="0 0 40 60" fill="none" stroke="#e9e0d2" stroke-width="1.5"><path d="M20 4v52M8 18h24"/></svg>';
+const $=s=>document.querySelector(s);
+const grid=$('#grid'), count=$('#count'), q=$('#q');
+let cat="All", shown=[], cur=0;
+
+/* Build category chips */
+const cats=["All",...new Set(ITEMS.map(i=>i.c))];
+$('#filters').innerHTML=cats.map(c=>`<button class="chip" aria-pressed="${c==='All'}" data-c="${c}">${c}</button>`).join('');
+$('#filters').addEventListener('click',e=>{
+  const b=e.target.closest('.chip'); if(!b) return;
+  cat=b.dataset.c;
+  document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  render();
+});
+
+/* Placeholder art (used when an item has no img) */
+function art(i){
+  if(i.img) return `<img src="${i.img}" alt="${i.t}" loading="lazy">`;
+  return GLYPH;
+}
+function bg(i){return i.img?'':`style="background:linear-gradient(160deg,hsl(${i.h} 45% 22%),#150f19)"`}
+
+/* Render gallery based on category + search text */
+function render(){
+  const term=q.value.trim().toLowerCase();
+  shown=ITEMS.filter(i=>(cat==="All"||i.c===cat)&&(i.t+i.c+i.d).toLowerCase().includes(term));
+  count.textContent=shown.length?`Showing ${shown.length} of ${ITEMS.length} pieces`:'';
+  grid.innerHTML=shown.length?shown.map((i,n)=>`
+    <button class="item" data-n="${n}">
+      <div class="frame" ${bg(i)}>${art(i)}</div>
+      <h3>${i.t}</h3><span class="tag">${i.c}</span>
+    </button>`).join(''):
+    `<div class="empty"><p>No pieces match "${term.replace(/[<>&]/g,'')}".</p><button class="btn ghost" id="reset" style="margin-top:1rem">Clear search</button></div>`;
+}
+grid.addEventListener('click',e=>{
+  if(e.target.id==='reset'){q.value='';cat='All';document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x.dataset.c==='All'));render();return}
+  const b=e.target.closest('.item'); if(b) openModal(+b.dataset.n);
+});
+
+/* Search: filter while typing and jump to the gallery */
+let jumped=false;
+q.addEventListener('input',()=>{
+  render();
+  if(!jumped&&q.value){jumped=true;$('#gallery').scrollIntoView()}
+  if(!q.value)jumped=false;
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='/'&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();openSearch();q.focus()}
+  if($('#modal').classList.contains('open')){
+    if(e.key==='Escape')closeModal();
+    if(e.key==='ArrowRight')step(1);
+    if(e.key==='ArrowLeft')step(-1);
+  }
+});
+
+/* Lightbox */
+let lastFocus;
+function openModal(n){
+  lastFocus=document.activeElement; cur=n; fill();
+  $('#modal').classList.add('open'); $('#mClose').focus();
+}
+function fill(){
+  const i=shown[cur];
+  $('#mFrame').style.background=i.img?'':`linear-gradient(160deg,hsl(${i.h} 45% 22%),#150f19)`;
+  $('#mFrame').innerHTML=art(i);
+  $('#mTitle').textContent=i.t; $('#mCat').textContent=i.c; $('#mDesc').textContent=i.d;
+}
+function step(d){cur=(cur+d+shown.length)%shown.length;fill()}
+function closeModal(){$('#modal').classList.remove('open');if(lastFocus)lastFocus.focus()}
+$('#mClose').onclick=closeModal;
+$('#mPrev').onclick=()=>step(-1);
+$('#mNext').onclick=()=>step(1);
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+
+/* Mobile menu + search toggles */
+function toggle(el,btn,force){
+  const open=force??!el.classList.contains('open');
+  el.classList.toggle('open',open); btn.setAttribute('aria-expanded',open);
+}
+$('#menuBtn').onclick=()=>toggle($('#menu'),$('#menuBtn'));
+$('#searchBtn').onclick=()=>{toggle($('#searchBox'),$('#searchBtn'));q.focus()};
+function openSearch(){toggle($('#searchBox'),$('#searchBtn'),true)}
+document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>toggle($('#menu'),$('#menuBtn'),false)));
+
+/* Toast + form */
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+$('#form').addEventListener('submit',e=>{
+  e.preventDefault();
+  toast('Subscribed. Welcome to the dark side.');
+  e.target.reset();
+  /* This form does not send data anywhere yet. Connect a service like Formspree or Netlify Forms to receive sign-ups. */
+});
+
+$('#year').textContent=new Date().getFullYear();
+render();
+</script>
+</body>
+</html>
